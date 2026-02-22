@@ -1,0 +1,18 @@
+{
+  "domain": "hass_tap_electric",
+  "name": "Tap Electric",
+  "codeowners": [
+    "@YordiDR"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/YordiDR/hass_tap_electric",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "hhttps://github.com/YordiDR/hass_tap_electric/issues",
+  "loggers": [
+    "pyTapElectric"
+  ],
+  "requirements": [
+    "pyTapElectric==0.0.1"
+  ],
+  "version": "0.0.0"
+}
