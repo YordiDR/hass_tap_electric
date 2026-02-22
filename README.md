@@ -1,0 +1,1 @@
+# Integration for Tap Electric EVSE in Home Assistant
