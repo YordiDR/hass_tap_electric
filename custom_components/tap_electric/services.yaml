@@ -1,0 +1,26 @@
+remote_start:
+  name: Remote Start
+  description: Start a charging session on a specific charger.
+  fields:
+    device_id:
+      name: Charger (Device)
+      description: Select the Tap Electric charger device.
+      required: true
+      selector:
+        device:
+          integration: tap_electric
+    connector_id:
+      name: Connector ID
+      description: The connector number (e.g. 1).
+      required: true
+      selector:
+        number:
+          mode: box
+          min: 1
+          step: 1
+    nfc_uid:
+      name: NFC UID (Optional)
+      description: The RFID tag UID to initiate charging.
+      required: false
+      selector:
+        text:

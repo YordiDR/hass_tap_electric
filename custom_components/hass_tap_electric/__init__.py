@@ -1,1 +1,0 @@
-"""Custom integration that integrates Tap Electric EVSE management with Home Assistant."""

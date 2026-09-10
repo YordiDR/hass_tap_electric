@@ -1,0 +1,14 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Tap Electric",
+        "description": "Provide your Tap Electric API details.",
+        "data": {
+          "api_key": "API Key",
+          "update_interval": "Update Interval (seconds)"
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,0 @@
-homeassistant
-pip
-pyTapElectric @ git+https://github.com/YordiDR/pyTapElectric.git@main
