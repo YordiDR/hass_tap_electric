@@ -48,6 +48,7 @@ class TapElectricBaseSensor(CoordinatorEntity, SensorEntity):
             "identifiers": {(DOMAIN, self.charger_id)},
             "name": data.get("name") or f"Tap Charger {self.charger_id}",
             "manufacturer": "Tap Electric",
+            "serial_number": self.charger_id,
         }
 
 
