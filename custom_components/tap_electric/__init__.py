@@ -18,7 +18,7 @@ from .coordinator import TapElectricChargerCoordinator
 _LOGGER = logging.getLogger(__name__)
 
 SERVICE_REMOTE_START = "remote_start"
-PLATFORMS = ["sensor", "binary_sensor"]
+PLATFORMS = ["sensor", "binary_sensor", "button"]
 
 # Fixed Schema: connector_id is an integer, nfc_uid is a string
 SERVICE_SCHEMA = vol.Schema(
