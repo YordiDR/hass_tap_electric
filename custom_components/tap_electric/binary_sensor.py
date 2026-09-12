@@ -6,10 +6,12 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
 )
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.device_registry import DeviceInfo
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+ACTIVE_STATUSES = {"CHARGING", "SUSPENDEDEV", "SUSPENDEDEVSE"}
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up the binary sensors."""
@@ -20,7 +22,6 @@ async def async_setup_entry(hass, entry, async_add_entities):
         if coordinator.data:
             entities.append(TapElectricOnlineSensor(coordinator, charger_id))
 
-            # Add the active session binary sensor for each connector
             for connector in coordinator.data.get("connectors", []):
                 conn_id = connector.get("id")
                 if conn_id is not None:
@@ -45,18 +46,19 @@ class TapElectricOnlineSensor(CoordinatorEntity, BinarySensorEntity):
         self._attr_name = "Online"
 
     @property
-    def device_info(self):
-        """Return device information to link to the device registry."""
+    def device_info(self) -> DeviceInfo:
+        """Return device information."""
+        charger_id_str = str(self.charger_id)
         data = self.coordinator.data or {}
-        return {
-            "identifiers": {(DOMAIN, self.charger_id)},
-            "name": data.get("name") or f"Tap Charger {self.charger_id}",
-            "manufacturer": "Tap Electric",
-            "serial_number": self.charger_id,
-        }
+        return DeviceInfo(
+            identifiers={(DOMAIN, charger_id_str)},
+            name=data.get("name") or f"Tap Charger {charger_id_str}",
+            manufacturer="Tap Electric",
+            serial_number=charger_id_str,
+        )
 
     @property
-    def is_on(self):
+    def is_on(self) -> bool:
         """Return true if the charger is online."""
         data = self.coordinator.data or {}
         return data.get("online") is True
@@ -77,21 +79,26 @@ class TapElectricConnectorSessionSensor(CoordinatorEntity, BinarySensorEntity):
         self._attr_name = f"Connector {connector_id} session active"
 
     @property
-    def device_info(self):
-        """Return device information to link to the device registry."""
+    def device_info(self) -> DeviceInfo:
+        """Return device information."""
+        charger_id_str = str(self._charger_id)
         data = self.coordinator.data or {}
-        return {
-            "identifiers": {(DOMAIN, self._charger_id)},
-            "name": data.get("name") or f"Tap Charger {self._charger_id}",
-            "manufacturer": "Tap Electric",
-            "serial_number": self._charger_id,
-        }
+        return DeviceInfo(
+            identifiers={(DOMAIN, charger_id_str)},
+            name=data.get("name") or f"Tap Charger {charger_id_str}",
+            manufacturer="Tap Electric",
+            serial_number=charger_id_str,
+        )
 
     @property
     def is_on(self) -> bool:
-        """Return true if the session is active."""
+        """Return true if the session is active based on connector status."""
         data = self.coordinator.data or {}
-        active_sessions = data.get("active_sessions", {})
-        
-        # Check active session for this specific connector
-        return active_sessions.get(self._connector_id, False)
+        connectors = data.get("connectors", [])
+
+        for conn in connectors:
+            if str(conn.get("id")) == str(self._connector_id):
+                status = str(conn.get("status", "")).upper()
+                return status in ACTIVE_STATUSES
+
+        return False
